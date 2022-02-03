@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProducedResourceManager : MonoBehaviour
+public class ProducedResourceManager : Warehouse_Base, IEnableWarehouses
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public int EnableThisWarehouse( WarehouseTypesAvailabe _type )
+	{
+		bool TypesMatch = _type == WH_MyType;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		gameObject.SetActive( TypesMatch );
+
+		if( TypesMatch ) CreateStackingSpawnPoints();
+
+		return TypesMatch ? 1 : 0;
+	}
 }

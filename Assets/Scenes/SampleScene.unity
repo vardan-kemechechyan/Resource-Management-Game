@@ -385,6 +385,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building_BASE
       objectReference: {fileID: 0}
+    - target: {fileID: 7446745265054361645, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: Capacity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: WH_Type.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: WH_Type.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: WH_Type.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9152658452347414417, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4ee01b0a9b1abc4c91d8a9f49199246, type: 3}
 --- !u!1001 &3218839397956424290

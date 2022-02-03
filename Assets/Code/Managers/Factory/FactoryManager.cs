@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class FactoryManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	[SerializeField] WarehouseTypesAvailabe[] WH_Type;
+	
+	[SerializeField] WarehouseManager WH_Manager;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private void Start()
+	{
+		WH_Manager.ConstructWarehouses( WH_Type );
+	}
+}
+
+public enum WarehouseTypesAvailabe
+{
+	PRODUCED_ITEMS,
+	CONSUMABLE_ITEMS,
+	NONE
 }
