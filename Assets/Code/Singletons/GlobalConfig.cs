@@ -15,6 +15,21 @@ public enum PlayInputRestriction
     NO_RESTRICTIONS
 }
 
+public enum ResourceTypeNames
+{
+    TYPE_1,
+    TYPE_2,
+    TYPE_3,
+    NONE
+}
+
+public enum WarehouseType
+{
+    PRODUCED,
+    CONSUMED,
+    NONE
+}
+
 public class GlobalConfig : Singleton<GlobalConfig>
 {
     public float PlayerSpeed = 10f;

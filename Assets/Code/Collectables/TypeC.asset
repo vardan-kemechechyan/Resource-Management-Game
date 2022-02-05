@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5c8e4fbd9d05141abb9bc3b38cc112, type: 3}
+  m_Name: TypeC
+  m_EditorClassIdentifier: 
+  ResourceObject: {fileID: 9119033148220879689, guid: 47f7017d0ca9e7b41baaa8dc1e07a5ab,
+    type: 3}
+  spawnPoints: []
+  r_Type: 2
+  r_Color:
+    serializedVersion: 2
+    rgba: 4278222847

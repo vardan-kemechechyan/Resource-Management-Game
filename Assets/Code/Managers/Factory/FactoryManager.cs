@@ -4,19 +4,29 @@ using UnityEngine;
 
 public class FactoryManager : MonoBehaviour
 {
-	[SerializeField] WarehouseTypesAvailabe[] WH_Type;
-	
 	[SerializeField] WarehouseManager WH_Manager;
+
+	[SerializeField] List<FactoryResourceInformation> ResourceManagementManifest;
 
 	private void Start()
 	{
-		WH_Manager.ConstructWarehouses( WH_Type );
+		WH_Manager.PrepareWarehouses( ResourceManagementManifest );
 	}
 }
 
-public enum WarehouseTypesAvailabe
+[System.Serializable]
+public struct FactoryResourceInformation
 {
-	PRODUCED_ITEMS,
-	CONSUMABLE_ITEMS,
-	NONE
+	public ResourceTypeNames ResourceType;
+	public WarehouseType WarehoustType;
+	public int Capacity;
+	public int InStock;
+
+	public FactoryResourceInformation( ResourceTypeNames _rt, WarehouseType _wt, int _cpty, int _stck)
+	{
+		ResourceType = _rt;
+		WarehoustType = _wt;
+		Capacity = _cpty;
+		InStock = _stck;
+	}
 }

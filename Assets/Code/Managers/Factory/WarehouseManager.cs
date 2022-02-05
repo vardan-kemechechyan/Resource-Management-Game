@@ -2,20 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarehouseManager : MonoBehaviour
+public class WarehouseManager : MonoBehaviour, IWarehouseManager
 {
-	[SerializeField] Transform TriggerZone;
+	[SerializeField] List<Warehouse_Base> AllWarehouses;
 
-	[SerializeField] Transform[] Warehouses;
-
-	public void ConstructWarehouses( WarehouseTypesAvailabe[] wh_Type )
+	public ResourceTypeNames GetStorageResourceType( WarehouseType _whT )
 	{
-		int NumberOfWarehouses = -1;
+		throw new System.NotImplementedException();
+	}
 
-		for ( int i = 0; i < Warehouses.Length; ++i )
-			NumberOfWarehouses += Warehouses[ i ].GetComponent<IEnableWarehouses>().EnableThisWarehouse( wh_Type[i] );
+	public void PrepareWarehouses( List<FactoryResourceInformation> manifest )
+	{
+		AllWarehouses = new List<Warehouse_Base>( GetComponentsInChildren<Warehouse_Base>());
 
-		foreach ( var warehouse in Warehouses )
-			warehouse.localPosition = new Vector3( warehouse.localPosition.x * NumberOfWarehouses, warehouse.localPosition.y, warehouse.localPosition.z);
+		for ( int i = 0; i < AllWarehouses.Count; ++i )
+		{
+			if ( i < manifest.Count )
+				AllWarehouses[ i ].EnableThisWarehouse( manifest[ i ] );
+			else
+				AllWarehouses[ i ].gameObject.SetActive( false );
+		}
 	}
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IEnableWarehouses
+public class Factory : MonoBehaviour
 {
-	ResourceTypeNames EnableThisWarehouse();
+	[SerializeField] WarehouseManager WH_Manager;
 }
