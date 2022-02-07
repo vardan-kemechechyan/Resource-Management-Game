@@ -17,9 +17,9 @@ public enum PlayInputRestriction
 
 public enum ResourceTypeNames
 {
-    TYPE_1,
-    TYPE_2,
-    TYPE_3,
+    TypeA,
+    TypeB,
+    TypeC,
     NONE
 }
 

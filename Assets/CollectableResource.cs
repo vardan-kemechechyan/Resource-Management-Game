@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class CollectableResource : MonoBehaviour
 {
-	[SerializeField] ResourceTypeNames r_Type;
+	[SerializeField] ResourceTypeScriptableObject ResourceDescription;
 
-	public ResourceTypeNames GetResourceType() { return r_Type; }
+	bool Pickable = false;
+	bool OnPlayer = false;
+	bool Unloaded = false;
+
+	public ResourceTypeNames GetResourceType() { return ResourceDescription.r_Type; }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7922171740611629642}
   - component: {fileID: 6577740864167530522}
   - component: {fileID: 6159362943197192721}
+  - component: {fileID: 6479539727995760053}
   m_Layer: 5
   m_Name: ProgressBar
   m_TagString: Untagged
@@ -72,9 +73,21 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6479539727995760053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2859679018729280367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54fedf72055f9f74bb131fd58c68c93b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3735264468598579175
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5862ac4bf59d299459d82a5291fdfd9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProducedResourcePrefab: {fileID: 0}
+  ProductionTime: 0
   WH_Manager: {fileID: 7938307517790921945}
   ResourceManagementManifest:
   - ResourceType: 0
@@ -404,6 +419,7 @@ GameObject:
   - component: {fileID: 8240922160886048018}
   - component: {fileID: 5154794971957664908}
   - component: {fileID: 2763843807559036384}
+  - component: {fileID: 1622322909646017382}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -492,6 +508,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1622322909646017382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240721916305910641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f403f5966959354ab6889fe164111e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FactoryProgressBar: {fileID: 6479539727995760053}
 --- !u!1001 &221625832889018306
 PrefabInstance:
   m_ObjectHideFlags: 0

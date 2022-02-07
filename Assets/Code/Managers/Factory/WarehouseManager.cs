@@ -11,7 +11,7 @@ public class WarehouseManager : MonoBehaviour, IWarehouseManager
 		throw new System.NotImplementedException();
 	}
 
-	public void PrepareWarehouses( List<FactoryResourceInformation> manifest )
+	public void PrepareWarehouses( List<FactoryWarehouseInformation> manifest )
 	{
 		AllWarehouses = new List<Warehouse_Base>( GetComponentsInChildren<Warehouse_Base>());
 
@@ -22,5 +22,29 @@ public class WarehouseManager : MonoBehaviour, IWarehouseManager
 			else
 				AllWarehouses[ i ].gameObject.SetActive( false );
 		}
+	}
+
+	public bool UnloadResource( CollectableResource _resource )
+	{
+		Warehouse_Base correctWH = AllWarehouses.Find( wh => wh.rs_Type == _resource.GetResourceType() );
+
+		return correctWH.LoadTheResourceIn( _resource );
+	}
+
+	public int CheckResourceAvailability( ResourceTypeNames _resName )
+	{
+		return AllWarehouses.Find( wh => wh.rs_Type == _resName ).GetResourceCount();
+	}
+
+	public bool CheckWarehouseCapacityForProducedResource( WarehouseType _whType )
+	{
+		return AllWarehouses.Find( wh => wh.wh_Type == _whType ).CheckIfWarehousFull();
+	}
+
+	public void ConsumeResourcesForProduction( ResourceCreationDependency[] _prdDependencies)
+	{
+		if( _prdDependencies.Length != 0 )
+			foreach ( var res in _prdDependencies )
+				AllWarehouses.Find( wh => wh.rs_Type == res.DependsOnResource ).ConsumeResource( res.QuanityNeeded );
 	}
 }

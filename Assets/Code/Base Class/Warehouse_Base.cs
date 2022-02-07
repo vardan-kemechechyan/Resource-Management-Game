@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Warehouse_Base : MonoBehaviour
 {
-    [SerializeField] protected WarehouseType wh_Type;
+    [SerializeField] public WarehouseType wh_Type;
     [SerializeField] protected Transform ResourceStackingArea;
 
-    [SerializeField] protected ResourceTypeNames rs_Type;
+    [SerializeField] public ResourceTypeNames rs_Type;
     [SerializeField] protected int Capacity;
     [SerializeField] protected int InStock;
 
@@ -21,18 +21,31 @@ public class Warehouse_Base : MonoBehaviour
     [SerializeField] Material ProducedResourceColor;
     [SerializeField] Material ConsumedResourceColor;
 
-    public void EnableThisWarehouse( FactoryResourceInformation _resourceManagementOrder)
+    [SerializeField] protected List<CollectableResource> StoreResourceObjects = new List<CollectableResource>();
+
+    bool InitialLoad = true;
+
+    public void EnableThisWarehouse( FactoryWarehouseInformation _resourceManagementOrder)
     {
         wh_Type = _resourceManagementOrder.WarehoustType;
 
         ResourceStackingArea.GetComponent<MeshRenderer>().material = wh_Type == WarehouseType.PRODUCED ? ProducedResourceColor : ConsumedResourceColor;
 
-        rs_Type = _resourceManagementOrder.ResourceType;
+        rs_Type = _resourceManagementOrder.ProducedResource.r_Type;
 
         Capacity = _resourceManagementOrder.Capacity;
         InStock = _resourceManagementOrder.InStock;
 
         CreateStackingSpawnPoints();
+
+        int inStock = _resourceManagementOrder.InStock;
+
+        for ( int i = 0; i < inStock; i++ )
+		{
+            CollectableResource resAlreadyInWarehouse = ( ( GameObject )Resources.Load( _resourceManagementOrder.ProducedResource.r_Type.ToString() ) ).GetComponent<CollectableResource>();
+
+            LoadTheResourceIn( Instantiate( resAlreadyInWarehouse ), InitialLoad );
+        }
     }
 
     public void CreateStackingSpawnPoints()
@@ -60,4 +73,34 @@ public class Warehouse_Base : MonoBehaviour
             }
 		}
     }
+
+    public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
+    {
+        if ( initialStart ) { InStock = 0; InitialLoad = false; }
+
+        _resource.transform.position = SpawnPoints[ InStock++ ].transform.position;
+
+        Transform trans = _resource.transform;
+
+        _resource.transform.position = new Vector3( trans.position.x + trans.localScale.x / 2f, trans.position.y + trans.localScale.y / 2f, trans.position.z - trans.localScale.z / 2f ); 
+
+        StoreResourceObjects.Add( _resource );
+
+        return InStock < Capacity;
+    }
+
+    public void ConsumeResource( int quantity )
+    {
+		for ( int i = 0; i < quantity; i++ )
+        {
+            Destroy( StoreResourceObjects[ StoreResourceObjects.Count - 1 ].gameObject );
+            StoreResourceObjects.RemoveAt( StoreResourceObjects.Count - 1 );
+        }
+
+        InStock -= quantity;
+    }
+
+    public int GetResourceCount() { return InStock; }
+
+    public bool CheckIfWarehousFull() { return InStock < Capacity; }
 }
