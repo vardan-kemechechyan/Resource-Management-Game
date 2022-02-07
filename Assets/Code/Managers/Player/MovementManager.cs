@@ -10,7 +10,9 @@ public class MovementManager : MonoBehaviour, IMovementManager, ISubscribe, IFin
 
 	Vector3 MoveDirection = Vector3.zero;
 
-	[SerializeField] bool StopWhenFingerUp; 
+	[SerializeField] bool StopWhenFingerUp;
+
+	[SerializeField] Transform VisualContainer;
 
 	public bool FingerUp { get; set; }
 
@@ -26,7 +28,10 @@ public class MovementManager : MonoBehaviour, IMovementManager, ISubscribe, IFin
 				return;
 
 		if ( _GameState == GameState.PLAYING )
+		{
+			VisualContainer.rotation = Quaternion.LookRotation( MoveDirection );
 			transform.Translate( MoveDirection * Speed * Time.fixedDeltaTime );
+		}
 	}
 
 	public void ExecuteMoveEvent( Vector3 EndPosition ) { MoveDirection = EndPosition; }

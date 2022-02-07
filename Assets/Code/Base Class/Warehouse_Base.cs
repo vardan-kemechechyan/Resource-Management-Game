@@ -5,23 +5,23 @@ using UnityEngine;
 public class Warehouse_Base : MonoBehaviour
 {
     [SerializeField] public WarehouseType wh_Type;
-    [SerializeField] protected Transform ResourceStackingArea;
+    [SerializeField] Transform ResourceStackingArea;
 
     [SerializeField] public ResourceTypeNames rs_Type;
-    [SerializeField] protected int Capacity;
-    [SerializeField] protected int InStock;
+    [SerializeField] int Capacity;
+    [SerializeField] int InStock;
 
     [SerializeField] protected float z_axis_starting_point = 0.5f;
 
-    [SerializeField] protected int NumberOfHorizontalSpawnPoints;
-    [SerializeField] protected int NumberOfVerticalSpawnPoints;
+    [SerializeField] int NumberOfHorizontalSpawnPoints;
+    [SerializeField] int NumberOfVerticalSpawnPoints;
 
-    [SerializeField] protected List<GameObject> SpawnPoints = new List<GameObject>();
+    [SerializeField] List<GameObject> SpawnPoints = new List<GameObject>();
 
     [SerializeField] Material ProducedResourceColor;
     [SerializeField] Material ConsumedResourceColor;
 
-    [SerializeField] protected List<CollectableResource> StoreResourceObjects = new List<CollectableResource>();
+    [SerializeField] List<CollectableResource> StoreResourceObjects = new List<CollectableResource>();
 
     bool InitialLoad = true;
 
@@ -47,7 +47,6 @@ public class Warehouse_Base : MonoBehaviour
             LoadTheResourceIn( Instantiate( resAlreadyInWarehouse ), InitialLoad );
         }
     }
-
     public void CreateStackingSpawnPoints()
     {
         float StackAreaWidth    = ResourceStackingArea.transform.localScale.x;
@@ -73,7 +72,6 @@ public class Warehouse_Base : MonoBehaviour
             }
 		}
     }
-
     public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
     {
         if ( initialStart ) { InStock = 0; InitialLoad = false; }
@@ -88,7 +86,6 @@ public class Warehouse_Base : MonoBehaviour
 
         return InStock < Capacity;
     }
-
     public void ConsumeResource( int quantity )
     {
 		for ( int i = 0; i < quantity; i++ )
@@ -99,8 +96,6 @@ public class Warehouse_Base : MonoBehaviour
 
         InStock -= quantity;
     }
-
     public int GetResourceCount() { return InStock; }
-
     public bool CheckIfWarehousFull() { return InStock < Capacity; }
 }

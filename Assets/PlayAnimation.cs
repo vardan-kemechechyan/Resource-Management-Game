@@ -22,7 +22,5 @@ public class PlayAnimation : MonoBehaviour
 		AttachedAnimator.ResetTrigger( TriggerName );
 
 		WarningText.text = "";
-
-		print( "here" );
 	}
 }

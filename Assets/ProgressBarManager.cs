@@ -8,8 +8,8 @@ public class ProgressBarManager : MonoBehaviour
 {
 	[SerializeField] ImageFiller FactoryProgressBar;
 
-	[SerializeField] string[] WarningTexts; // 0 - Lack of Resources, 1 - Storage Full
-	[SerializeField] TextMeshProUGUI[] StaticWarningTexts; // 0 - Lack of Resources, 1 - Storage Full
+	[SerializeField] string[] WarningTexts;					// 0 - Lack of Resources, 1 - Storage Full
+	[SerializeField] TextMeshProUGUI[] StaticWarningTexts;	// 0 - Lack of Resources, 1 - Storage Full
 
 	PlayAnimation WarningAnimation;
 
