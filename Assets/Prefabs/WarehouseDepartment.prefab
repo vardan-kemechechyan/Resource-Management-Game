@@ -57,6 +57,7 @@ MonoBehaviour:
     type: 2}
   ConsumedResourceColor: {fileID: 2100000, guid: b091bf8249b48bf44bf5b74b2b474300,
     type: 2}
+  StoreResourceObjects: []
 --- !u!1 &6207066897644390410
 GameObject:
   m_ObjectHideFlags: 0

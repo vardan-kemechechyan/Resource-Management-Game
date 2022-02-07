@@ -190,6 +190,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building_2
       objectReference: {fileID: 0}
+    - target: {fileID: 5690209121434101186, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
+      objectReference: {fileID: 0}
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}
       propertyPath: m_Enabled
@@ -198,7 +203,7 @@ PrefabInstance:
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}
       propertyPath: ProductionTime
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}
@@ -213,12 +218,12 @@ PrefabInstance:
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}
       propertyPath: ResourceManagementManifest.Array.data[0].InStock
-      value: 5
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}
       propertyPath: ResourceManagementManifest.Array.data[1].InStock
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8341681141842435940, guid: b4ee01b0a9b1abc4c91d8a9f49199246,
         type: 3}

@@ -3,9 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum ProductionDailureType
+{
+	Lack_Of_Resources,
+	Storage_Full
+}
+
 public class FactoryManager : MonoBehaviour
 {
 	public Action<float> ProducingOneResourceUnit = delegate(float _progress) { }; 
+	public Action<int> ProductionStopped = delegate(int issueType) { }; 
+	public Action PlayStackedWarnings = delegate() { }; 
 
 	CollectableResource ProducedResourcePrefab;
 
@@ -64,6 +72,8 @@ public class FactoryManager : MonoBehaviour
 
 			CheckWarehouseCapacityForProducedResource();
 
+			PlayStackedWarnings.Invoke();
+
 			yield return new WaitForSeconds(0.5f);
 
 			print($"Produced Resource {WarehouseForProducedResource.ProducedResource.r_Type}; In Stock {WH_Manager.CheckResourceAvailability( WarehouseForProducedResource.ProducedResource.r_Type )}");	
@@ -80,7 +90,7 @@ public class FactoryManager : MonoBehaviour
 
 				FactoryHasEnoughResources = resAmount >= resType.QuanityNeeded;
 
-				if ( !FactoryHasEnoughResources ) break;
+				if ( !FactoryHasEnoughResources ) { ProductionStopped.Invoke( (int)ProductionDailureType.Lack_Of_Resources );  break; }
 			}
 		}
 	}
@@ -88,6 +98,8 @@ public class FactoryManager : MonoBehaviour
 	void CheckWarehouseCapacityForProducedResource()
 	{
 		FactoryHasEnoughCapacity = WH_Manager.CheckWarehouseCapacityForProducedResource( WarehouseForProducedResource.WarehoustType );
+
+		if( !FactoryHasEnoughCapacity ) ProductionStopped.Invoke( ( int )ProductionDailureType.Storage_Full );
 	}
 }
 
