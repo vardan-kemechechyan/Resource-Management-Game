@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, IResourceDistribution
 {
     [SerializeField] List<CollectableResource> StoredResourceObjects = new List<CollectableResource>();
     [SerializeField] List<GameObject> SpawnPoints = new List<GameObject>();
@@ -45,28 +45,9 @@ public class InventoryManager : MonoBehaviour
         }
     }
     
-    //TODO: redo into interface
-    public void LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
-    {
-        if ( initialStart ) { InStock = 0; InitialLoad = false; }
-
-        _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
-
-        _resource.transform.localPosition = SpawnPoints[ InStock ].transform.localPosition;
-
-        _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
-
-        InStock++;
-
-        StoredResourceObjects.Add( _resource );
-    }
-    public bool CheckIfOverloaded()
-    {
-        return InStock >= InventoryStorageCapacity;
-    }
     public CollectableResource UnloadResource( ResourceTypeNames? _resourceType ) 
     {
-        CollectableResource ResourceToUnload = new CollectableResource();
+        CollectableResource ResourceToUnload = null;
 
         if ( _resourceType != null )
 			for ( int i = 0; i < StoredResourceObjects.Count; i++ )
@@ -91,6 +72,26 @@ public class InventoryManager : MonoBehaviour
                 }
 
         return ResourceToUnload;
+    }
+    public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
+    {
+        if ( initialStart ) { InStock = 0; InitialLoad = false; }
+
+        _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
+
+        _resource.transform.localPosition = SpawnPoints[ InStock ].transform.localPosition;
+
+        _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
+
+        InStock++;
+
+        StoredResourceObjects.Add( _resource );
+
+        return InStock < InventoryStorageCapacity;
+    }
+    public bool CheckIfOverloaded()
+    {
+        return InStock >= InventoryStorageCapacity;
     }
     public int GetResourceCount() { return InStock; }
 }

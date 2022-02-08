@@ -8,10 +8,17 @@ public class UnloadManager : MonoBehaviour
 	[SerializeField] WarehouseType wh_type;
 	[SerializeField] ResourceTypeNames rsc_type;
 
-	private void Start() { wh_type = Warehouse.GetWarehouseType(); rsc_type = Warehouse.GetResourceType(); }
+	IResourceDistribution StorageManagement;
 
-	public bool CanBePickedUp() { return Warehouse.GetResourceCount() != 0; }
-	public bool CanBeLoadedIn() { return !Warehouse.CheckIfOverloaded(); }
+	private void Start() 
+	{
+		StorageManagement = Warehouse.GetComponent<IResourceDistribution>();
+		wh_type = Warehouse.GetWarehouseType(); 
+		rsc_type = Warehouse.GetResourceType();
+	}
+	
+	public bool CanBePickedUp() { return StorageManagement.GetResourceCount() != 0; }
+	public bool CanBeLoadedIn() { return !StorageManagement.CheckIfOverloaded(); }
 
 	public WarehouseType GetWarehouseType() 
 	{ 
@@ -28,9 +35,9 @@ public class UnloadManager : MonoBehaviour
 		return rsc_type;
 	}
 
-	public CollectableResource PickedUpResource() { return Warehouse.UnloadResource(); }
+	public CollectableResource PickedUpResource() { return StorageManagement.UnloadResource(); }
 	public void TakeResourceFromPlayer( CollectableResource _resourceFromPlayer) 
 	{
-		Warehouse.LoadTheResourceIn( _resourceFromPlayer );
+		StorageManagement.LoadTheResourceIn( _resourceFromPlayer );
 	}
 }

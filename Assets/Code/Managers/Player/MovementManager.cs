@@ -43,7 +43,6 @@ public class MovementManager : MonoBehaviour, IMovementManager, ISubscribe, IFin
 				rb.MovePosition( hit.point );
 
 			VisualContainer.rotation = Quaternion.LookRotation( MoveDirection );
-			//rb.MovePosition( rb.position + MoveDirection * Speed * Time.fixedDeltaTime );
 		}
 	}
 

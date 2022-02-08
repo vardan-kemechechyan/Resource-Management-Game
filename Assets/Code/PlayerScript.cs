@@ -9,9 +9,12 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] int InventoryStorageCapacity;
 
+    IResourceDistribution InventoryManagement;
+
     private void Start()
 	{
         Inventory.InitializeTheInventory( InventoryStorageCapacity, AllResourcesOnPlayer );
+        InventoryManagement = Inventory.GetComponent<IResourceDistribution>();
     }
 
 	private void OnTriggerEnter( Collider other )
@@ -29,23 +32,23 @@ public class PlayerScript : MonoBehaviour
 
     public void PickUpResource( UnloadManager WarehousLoadManager )
     {
-        if( !Inventory.CheckIfOverloaded() )
+        if( !InventoryManagement.CheckIfOverloaded() )
             if ( WarehousLoadManager.CanBePickedUp() )
             {
                 CollectableResource pickRes = WarehousLoadManager.PickedUpResource();
 
-                Inventory.LoadTheResourceIn( pickRes );
+                InventoryManagement.LoadTheResourceIn( pickRes );
                 AllResourcesOnPlayer.Add( pickRes.GetResourceType() );
             }
     }
 
     public void LoadTheResourceIn( UnloadManager WarehousLoadManager ) 
     { 
-        if( Inventory.GetResourceCount() != 0 )
+        if( InventoryManagement.GetResourceCount() != 0 )
             if( CheckResourceMatch( WarehousLoadManager.GetWarehouseResourceType() ) )
                 if ( WarehousLoadManager.CanBeLoadedIn())
                 {
-                    WarehousLoadManager.TakeResourceFromPlayer( Inventory.UnloadResource( WarehousLoadManager.GetWarehouseResourceType() ) );
+                    WarehousLoadManager.TakeResourceFromPlayer( InventoryManagement.UnloadResource( WarehousLoadManager.GetWarehouseResourceType() ) );
                     AllResourcesOnPlayer.Remove( WarehousLoadManager.GetWarehouseResourceType() );
                 }
     }

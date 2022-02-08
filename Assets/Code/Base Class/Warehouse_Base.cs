@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Warehouse_Base : MonoBehaviour
+public class Warehouse_Base : MonoBehaviour, IResourceDistribution
 {
     WarehouseManager SuperVisorWarehouseManager;
 
@@ -93,7 +93,7 @@ public class Warehouse_Base : MonoBehaviour
     public WarehouseType GetWarehouseType() { return wh_Type; }
     public ResourceTypeNames GetResourceType() { return rs_Type; }
     
-    //TODO: redo into interface
+
     public CollectableResource UnloadResource( ResourceTypeNames? _resourceType = null )
     {
         CollectableResource ResourceToUnload = StoreResourceObjects[ StoreResourceObjects.Count - 1 ];
@@ -114,10 +114,6 @@ public class Warehouse_Base : MonoBehaviour
         _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
 
         _resource.transform.localPosition = Vector3.zero;
-
-        Transform trans = _resource.transform;
-
-        //_resource.transform.localPosition = new Vector3( trans.localPosition.x + trans.localScale.x / 2f, trans.localPosition.y + trans.localScale.y / 2f, trans.localPosition.z - trans.localScale.z / 2f );
 
         _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
 
