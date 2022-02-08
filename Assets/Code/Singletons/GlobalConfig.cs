@@ -33,6 +33,7 @@ public enum WarehouseType
 public class GlobalConfig : Singleton<GlobalConfig>
 {
     public float PlayerSpeed = 10f;
+    public float ResourceAnimationSpeed = 100f;
 
     public override void Awake() { base.Awake(); Application.targetFrameRate = 60; }
 }

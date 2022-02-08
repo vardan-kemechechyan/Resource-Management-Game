@@ -11,10 +11,24 @@ public class PlayerScript : MonoBehaviour
 
     IResourceDistribution InventoryManagement;
 
+    Coroutine LoadUnloadInProgress;
+
     private void Start()
 	{
         Inventory.InitializeTheInventory( InventoryStorageCapacity, AllResourcesOnPlayer );
         InventoryManagement = Inventory.GetComponent<IResourceDistribution>();
+    }
+	private void OnTriggerExit( Collider other )
+	{
+        if ( other.GetComponent<UnloadManager>() != null )
+        {
+            if( LoadUnloadInProgress != null )
+            {
+                StopCoroutine( LoadUnloadInProgress );
+
+                LoadUnloadInProgress = null;
+			}
+		}
     }
 
 	private void OnTriggerEnter( Collider other )
@@ -24,33 +38,54 @@ public class PlayerScript : MonoBehaviour
             UnloadManager WarehousLoadManager = other.GetComponent<UnloadManager>();
             
             if ( WarehousLoadManager.GetWarehouseType() == WarehouseType.PRODUCED )
-                PickUpResource( WarehousLoadManager );
-            else 
-                LoadTheResourceIn( WarehousLoadManager );
+                LoadUnloadInProgress = StartCoroutine( PickUpResource( WarehousLoadManager ) );
+            else
+                LoadUnloadInProgress = StartCoroutine( LoadTheResourceIn( WarehousLoadManager ) );
 		}
 	}
 
-    public void PickUpResource( UnloadManager WarehousLoadManager )
+	IEnumerator PickUpResource( UnloadManager WarehousLoadManager )
     {
-        if( !InventoryManagement.CheckIfOverloaded() )
+        while( !InventoryManagement.CheckIfOverloaded() )
+        {
+            if( WarehousLoadManager.CanBePickedUp() )
+            {
+                CollectableResource pickRes = WarehousLoadManager.PickedUpResource();
+
+                InventoryManagement.LoadTheResourceIn( pickRes );
+                AllResourcesOnPlayer.Add( pickRes.GetResourceType() );
+			}
+
+            yield return new WaitForSeconds(.5f);
+        }
+
+        LoadUnloadInProgress = null;
+
+        /*if( !InventoryManagement.CheckIfOverloaded() )
             if ( WarehousLoadManager.CanBePickedUp() )
             {
                 CollectableResource pickRes = WarehousLoadManager.PickedUpResource();
 
                 InventoryManagement.LoadTheResourceIn( pickRes );
                 AllResourcesOnPlayer.Add( pickRes.GetResourceType() );
-            }
+            }*/
     }
 
-    public void LoadTheResourceIn( UnloadManager WarehousLoadManager ) 
+    IEnumerator LoadTheResourceIn( UnloadManager WarehousLoadManager ) 
     { 
-        if( InventoryManagement.GetResourceCount() != 0 )
+        while( InventoryManagement.GetResourceCount() != 0 )
+        {
             if( CheckResourceMatch( WarehousLoadManager.GetWarehouseResourceType() ) )
                 if ( WarehousLoadManager.CanBeLoadedIn())
                 {
                     WarehousLoadManager.TakeResourceFromPlayer( InventoryManagement.UnloadResource( WarehousLoadManager.GetWarehouseResourceType() ) );
                     AllResourcesOnPlayer.Remove( WarehousLoadManager.GetWarehouseResourceType() );
                 }
+
+            yield return new WaitForSeconds( .5f );
+        }
+
+        LoadUnloadInProgress = null;
     }
 
     bool CheckResourceMatch( ResourceTypeNames _warehouseResoureType )

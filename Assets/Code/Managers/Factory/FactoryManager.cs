@@ -56,6 +56,8 @@ public class FactoryManager : MonoBehaviour
 		{
 			print( $"Producing Resource {WarehouseForProducedResource.ProducedResource.r_Type}" );
 
+			WH_Manager.ConsumeResourcesForProduction( WarehouseForProducedResource.ProducedResource.ProductionDependencies );
+			
 			while ( (productionInProgress += Time.deltaTime) < ProductionTime )
 			{
 				ProducingOneResourceUnit.Invoke( productionInProgress / ProductionTime );
@@ -65,9 +67,8 @@ public class FactoryManager : MonoBehaviour
 
 			productionInProgress = 0f;
 
-			WH_Manager.ConsumeResourcesForProduction( WarehouseForProducedResource.ProducedResource.ProductionDependencies );
 
-			WH_Manager.ShipProducedResourceToWarehouse ( Instantiate( ProducedResourcePrefab ) );
+			WH_Manager.ShipProducedResourceToWarehouse ( Instantiate( ProducedResourcePrefab, transform.position, Quaternion.identity ));
 
 			ProducingOneResourceUnit.Invoke( 0f );
 

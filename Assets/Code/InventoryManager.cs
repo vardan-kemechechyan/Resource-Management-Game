@@ -71,23 +71,26 @@ public class InventoryManager : MonoBehaviour, IResourceDistribution
                     break;
                 }
 
+        ResourceToUnload.StopAllCoroutines();
+
         return ResourceToUnload;
     }
-    public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
+    public void LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
     {
         if ( initialStart ) { InStock = 0; InitialLoad = false; }
 
         _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
 
-        _resource.transform.localPosition = SpawnPoints[ InStock ].transform.localPosition;
+        _resource.Animate( SpawnPoints[ InStock ].transform.localPosition, delegate () {
 
-        _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
+            // _resource.transform.localPosition = SpawnPoints[ InStock ].transform.localPosition;
+            
+            _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
+        } );
 
         InStock++;
 
         StoredResourceObjects.Add( _resource );
-
-        return InStock < InventoryStorageCapacity;
     }
     public bool CheckIfOverloaded()
     {

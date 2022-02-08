@@ -28,11 +28,11 @@ public class WarehouseManager : MonoBehaviour, IWarehouseManager
 		}
 	}
 
-	public bool ShipProducedResourceToWarehouse( CollectableResource _resource )
+	public void ShipProducedResourceToWarehouse( CollectableResource _resource )
 	{
 		Warehouse_Base correctWH = AllWarehouses.Find( wh => wh.GetResourceType() == _resource.GetResourceType() );
 
-		return correctWH.LoadTheResourceIn( _resource );
+		correctWH.LoadTheResourceIn( _resource );
 	}
 
 	public int CheckResourceAvailability( ResourceTypeNames _resName )
