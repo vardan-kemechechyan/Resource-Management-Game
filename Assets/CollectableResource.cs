@@ -6,9 +6,21 @@ public class CollectableResource : MonoBehaviour
 {
 	[SerializeField] ResourceTypeScriptableObject ResourceDescription;
 
-	bool Pickable = false;
+	bool Pickable = true;
 	bool OnPlayer = false;
-	bool Unloaded = false;
 
 	public ResourceTypeNames GetResourceType() { return ResourceDescription.r_Type; }
+
+	public bool CanBePickedUp()
+	{
+		if( Pickable && !OnPlayer )
+		{
+			Pickable = false;
+			OnPlayer = true;
+
+			return true;
+		}
+
+		return false;
+	}
 }

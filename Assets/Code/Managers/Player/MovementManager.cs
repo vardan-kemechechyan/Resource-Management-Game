@@ -14,6 +14,8 @@ public class MovementManager : MonoBehaviour, IMovementManager, ISubscribe, IFin
 
 	[SerializeField] Transform VisualContainer;
 
+	[SerializeField] Rigidbody rb;
+
 	public bool FingerUp { get; set; }
 
 	private void Start()
@@ -29,8 +31,19 @@ public class MovementManager : MonoBehaviour, IMovementManager, ISubscribe, IFin
 
 		if ( _GameState == GameState.PLAYING )
 		{
+			Vector3 NewPos = rb.position + MoveDirection * Speed * Time.fixedDeltaTime;
+
+			Vector3 direction = NewPos - rb.position;
+			Ray ray = new Ray( rb.position, direction );
+			RaycastHit hit;
+			
+			if ( !Physics.Raycast( ray, out hit, direction.magnitude ) || hit.collider.isTrigger )
+				rb.MovePosition( NewPos );
+			else
+				rb.MovePosition( hit.point );
+
 			VisualContainer.rotation = Quaternion.LookRotation( MoveDirection );
-			transform.Translate( MoveDirection * Speed * Time.fixedDeltaTime );
+			//rb.MovePosition( rb.position + MoveDirection * Speed * Time.fixedDeltaTime );
 		}
 	}
 

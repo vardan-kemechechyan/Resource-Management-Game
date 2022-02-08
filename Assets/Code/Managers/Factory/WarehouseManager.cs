@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WarehouseManager : MonoBehaviour, IWarehouseManager
 {
+	FactoryManager SupervisoeFactoryManager;
+
 	[SerializeField] List<Warehouse_Base> AllWarehouses;
 
 	public ResourceTypeNames GetStorageResourceType( WarehouseType _whT )
@@ -13,6 +15,8 @@ public class WarehouseManager : MonoBehaviour, IWarehouseManager
 
 	public void PrepareWarehouses( List<FactoryWarehouseInformation> manifest )
 	{
+		SupervisoeFactoryManager = transform.parent.GetComponent<FactoryManager>();
+
 		AllWarehouses = new List<Warehouse_Base>( GetComponentsInChildren<Warehouse_Base>());
 
 		for ( int i = 0; i < AllWarehouses.Count; ++i )
@@ -24,27 +28,32 @@ public class WarehouseManager : MonoBehaviour, IWarehouseManager
 		}
 	}
 
-	public bool UnloadResource( CollectableResource _resource )
+	public bool ShipProducedResourceToWarehouse( CollectableResource _resource )
 	{
-		Warehouse_Base correctWH = AllWarehouses.Find( wh => wh.rs_Type == _resource.GetResourceType() );
+		Warehouse_Base correctWH = AllWarehouses.Find( wh => wh.GetResourceType() == _resource.GetResourceType() );
 
 		return correctWH.LoadTheResourceIn( _resource );
 	}
 
 	public int CheckResourceAvailability( ResourceTypeNames _resName )
 	{
-		return AllWarehouses.Find( wh => wh.rs_Type == _resName ).GetResourceCount();
+		return AllWarehouses.Find( wh => wh.GetResourceType() == _resName ).GetResourceCount();
 	}
 
 	public bool CheckWarehouseCapacityForProducedResource( WarehouseType _whType )
 	{
-		return AllWarehouses.Find( wh => wh.wh_Type == _whType ).CheckIfWarehousFull();
+		return AllWarehouses.Find( wh => wh.GetWarehouseType() == _whType ).CheckIfOverloaded();
 	}
 
 	public void ConsumeResourcesForProduction( ResourceCreationDependency[] _prdDependencies)
 	{
 		if( _prdDependencies.Length != 0 )
 			foreach ( var res in _prdDependencies )
-				AllWarehouses.Find( wh => wh.rs_Type == res.DependsOnResource ).ConsumeResource( res.QuanityNeeded );
+				AllWarehouses.Find( wh => wh.GetResourceType() == res.DependsOnResource ).ConsumeResource( res.QuanityNeeded );
+	}
+
+	public void CheckIfFactoryCanProduce()
+	{
+		SupervisoeFactoryManager.InventoryUpdated();
 	}
 }

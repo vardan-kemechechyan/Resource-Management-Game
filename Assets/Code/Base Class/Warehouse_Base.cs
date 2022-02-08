@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Warehouse_Base : MonoBehaviour
 {
-    [SerializeField] public WarehouseType wh_Type;
+    WarehouseManager SuperVisorWarehouseManager;
+
+    [SerializeField] WarehouseType wh_Type;
     [SerializeField] Transform ResourceStackingArea;
 
-    [SerializeField] public ResourceTypeNames rs_Type;
+    [SerializeField] ResourceTypeNames rs_Type;
     [SerializeField] int Capacity;
     [SerializeField] int InStock;
 
@@ -27,6 +29,8 @@ public class Warehouse_Base : MonoBehaviour
 
     public void EnableThisWarehouse( FactoryWarehouseInformation _resourceManagementOrder)
     {
+        SuperVisorWarehouseManager = transform.parent.GetComponent<WarehouseManager>();
+
         wh_Type = _resourceManagementOrder.WarehoustType;
 
         ResourceStackingArea.GetComponent<MeshRenderer>().material = wh_Type == WarehouseType.PRODUCED ? ProducedResourceColor : ConsumedResourceColor;
@@ -72,21 +76,7 @@ public class Warehouse_Base : MonoBehaviour
             }
 		}
     }
-    public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
-    {
-        if ( initialStart ) { InStock = 0; InitialLoad = false; }
-
-        _resource.transform.position = SpawnPoints[ InStock++ ].transform.position;
-
-        Transform trans = _resource.transform;
-
-        _resource.transform.position = new Vector3( trans.position.x + trans.localScale.x / 2f, trans.position.y + trans.localScale.y / 2f, trans.position.z - trans.localScale.z / 2f ); 
-
-        StoreResourceObjects.Add( _resource );
-
-        return InStock < Capacity;
-    }
-    public void ConsumeResource( int quantity )
+    public void ConsumeResource( int quantity = 1 )
     {
 		for ( int i = 0; i < quantity; i++ )
         {
@@ -96,6 +86,50 @@ public class Warehouse_Base : MonoBehaviour
 
         InStock -= quantity;
     }
+    public bool CheckIfResourceTypeMatchesWharehouseType( ResourceTypeNames _incomingResource)
+    {
+        return _incomingResource == rs_Type;
+    }
+    public WarehouseType GetWarehouseType() { return wh_Type; }
+    public ResourceTypeNames GetResourceType() { return rs_Type; }
+    
+    //TODO: redo into interface
+    public CollectableResource UnloadResource( ResourceTypeNames? _resourceType = null )
+    {
+        CollectableResource ResourceToUnload = StoreResourceObjects[ StoreResourceObjects.Count - 1 ];
+        StoreResourceObjects.RemoveAt( StoreResourceObjects.Count - 1 );
+
+        InStock --;
+
+        SuperVisorWarehouseManager.CheckIfFactoryCanProduce();
+
+        return ResourceToUnload;
+    }
+    public bool LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
+    {
+        if ( !(!CheckIfOverloaded() && CheckIfResourceTypeMatchesWharehouseType( _resource.GetResourceType() )) ) return false;
+
+        if ( initialStart ) { InStock = 0; InitialLoad = false; }
+
+        _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
+
+        _resource.transform.localPosition = Vector3.zero;
+
+        Transform trans = _resource.transform;
+
+        //_resource.transform.localPosition = new Vector3( trans.localPosition.x + trans.localScale.x / 2f, trans.localPosition.y + trans.localScale.y / 2f, trans.localPosition.z - trans.localScale.z / 2f );
+
+        _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
+
+        StoreResourceObjects.Add( _resource );
+
+        InStock++;
+
+        SuperVisorWarehouseManager.CheckIfFactoryCanProduce();
+
+        return InStock < Capacity;
+    }
+
+    public bool CheckIfOverloaded() { return InStock >= Capacity; }
     public int GetResourceCount() { return InStock; }
-    public bool CheckIfWarehousFull() { return InStock < Capacity; }
 }

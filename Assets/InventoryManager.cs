@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
 
     [SerializeField] float Y_Gap;
 
-    int ResourcesAmountInInventory;
+    int InStock;
     int InventoryStorageCapacity;
 
     bool InitialLoad = true;
@@ -17,11 +17,11 @@ public class InventoryManager : MonoBehaviour
     public void InitializeTheInventory(int storageCapacity, List<ResourceTypeNames> _manifest)
     {
         InventoryStorageCapacity = storageCapacity;
-        ResourcesAmountInInventory = _manifest.Count;
+        InStock = _manifest.Count;
 
         CreateStackingSpawnPoints();
 
-        int inStock = ResourcesAmountInInventory;
+        int inStock = InStock;
 
         for ( int i = 0; i < inStock; i++ )
         {
@@ -30,7 +30,6 @@ public class InventoryManager : MonoBehaviour
             LoadTheResourceIn( Instantiate( resAlreadyInWarehouse ), InitialLoad );
         }
     }
-
     public void CreateStackingSpawnPoints()
     {
         int NumberOfSpawnPoints = 0;
@@ -45,15 +44,53 @@ public class InventoryManager : MonoBehaviour
             NumberOfSpawnPoints++;
         }
     }
-
+    
+    //TODO: redo into interface
     public void LoadTheResourceIn( CollectableResource _resource, bool initialStart = false )
     {
-        if ( initialStart ) { ResourcesAmountInInventory = 0; InitialLoad = false; }
+        if ( initialStart ) { InStock = 0; InitialLoad = false; }
 
-        _resource.transform.SetParent( SpawnPoints[ ResourcesAmountInInventory++ ].transform );
+        _resource.transform.SetParent( SpawnPoints[ InStock ].transform );
 
-        _resource.transform.localPosition = SpawnPoints[ ResourcesAmountInInventory++ ].transform.localPosition;
+        _resource.transform.localPosition = SpawnPoints[ InStock ].transform.localPosition;
+
+        _resource.transform.localRotation = Quaternion.Euler( Vector3.zero );
+
+        InStock++;
 
         StoredResourceObjects.Add( _resource );
     }
+    public bool CheckIfOverloaded()
+    {
+        return InStock >= InventoryStorageCapacity;
+    }
+    public CollectableResource UnloadResource( ResourceTypeNames? _resourceType ) 
+    {
+        CollectableResource ResourceToUnload = new CollectableResource();
+
+        if ( _resourceType != null )
+			for ( int i = 0; i < StoredResourceObjects.Count; i++ )
+                if( StoredResourceObjects[i].GetResourceType() == _resourceType )
+                {
+                    ResourceToUnload = StoredResourceObjects[ i ];
+
+                    StoredResourceObjects.RemoveAt( i );
+
+                    InStock--;
+
+                    for ( int j = i; j < StoredResourceObjects.Count; j++ )
+					{
+                        if( StoredResourceObjects[j] != null )
+                        {
+                            StoredResourceObjects[ j ].transform.SetParent( SpawnPoints[ j ].transform );
+                            StoredResourceObjects[ j ].transform.localPosition = SpawnPoints[ j ].transform.localPosition;               
+						}
+                    }
+
+                    break;
+                }
+
+        return ResourceToUnload;
+    }
+    public int GetResourceCount() { return InStock; }
 }

@@ -22,6 +22,7 @@ public class ProgressBarManager : MonoBehaviour
 		transform.parent.GetComponent<FactoryManager>().ProducingOneResourceUnit += ExectureProgressBar;
 		transform.parent.GetComponent<FactoryManager>().ProductionStopped += ExecuteFailureNotification;
 		transform.parent.GetComponent<FactoryManager>().PlayStackedWarnings += PlayAllStackedWarning;
+		transform.parent.GetComponent<FactoryManager>().ProductionFailureRemoved += RemoveWarning;
 	}
 
 	private void OnDisable()
@@ -29,6 +30,7 @@ public class ProgressBarManager : MonoBehaviour
 		transform.parent.GetComponent<FactoryManager>().ProducingOneResourceUnit -= ExectureProgressBar;
 		transform.parent.GetComponent<FactoryManager>().ProductionStopped -= ExecuteFailureNotification;
 		transform.parent.GetComponent<FactoryManager>().PlayStackedWarnings -= PlayAllStackedWarning;
+		transform.parent.GetComponent<FactoryManager>().ProductionFailureRemoved -= RemoveWarning;
 	}
 
 	private void OnDestroy()
@@ -36,6 +38,12 @@ public class ProgressBarManager : MonoBehaviour
 		transform.parent.GetComponent<FactoryManager>().ProducingOneResourceUnit -= ExectureProgressBar;
 		transform.parent.GetComponent<FactoryManager>().ProductionStopped -= ExecuteFailureNotification;
 		transform.parent.GetComponent<FactoryManager>().PlayStackedWarnings -= PlayAllStackedWarning;
+		transform.parent.GetComponent<FactoryManager>().ProductionFailureRemoved -= RemoveWarning;
+	}
+
+	public void RemoveWarning(int _errType )
+	{
+		StaticWarningTexts[ _errType ].gameObject.SetActive( false );
 	}
 
 	public void ExectureProgressBar( float _value = 0)

@@ -13,6 +13,7 @@ public class FactoryManager : MonoBehaviour
 {
 	public Action<float> ProducingOneResourceUnit = delegate(float _progress) { }; 
 	public Action<int> ProductionStopped = delegate(int issueType) { }; 
+	public Action<int> ProductionFailureRemoved = delegate( int issueType ) { }; 
 	public Action PlayStackedWarnings = delegate() { }; 
 
 	CollectableResource ProducedResourcePrefab;
@@ -28,6 +29,8 @@ public class FactoryManager : MonoBehaviour
 	bool FactoryHasEnoughCapacity = true;
 	bool FactoryHasEnoughResources = true;
 
+	Coroutine ProductionInProgress;
+
 	private void Start()
 	{
 		WarehouseForProducedResource = ResourceManagementManifest.Find( x => x.WarehoustType == WarehouseType.PRODUCED );
@@ -40,7 +43,7 @@ public class FactoryManager : MonoBehaviour
 
 		CheckWarehouseCapacityForProducedResource();
 
-		StartCoroutine( ProduceElement() );
+		InventoryUpdated();
 
 		print($"FactoryHasEnoughCapacity: {FactoryHasEnoughCapacity}\nFactoryHasEnoughResources: {FactoryHasEnoughResources}" );
 	}
@@ -64,7 +67,7 @@ public class FactoryManager : MonoBehaviour
 
 			WH_Manager.ConsumeResourcesForProduction( WarehouseForProducedResource.ProducedResource.ProductionDependencies );
 
-			WH_Manager.UnloadResource ( Instantiate( ProducedResourcePrefab ) );
+			WH_Manager.ShipProducedResourceToWarehouse ( Instantiate( ProducedResourcePrefab ) );
 
 			ProducingOneResourceUnit.Invoke( 0f );
 
@@ -78,6 +81,8 @@ public class FactoryManager : MonoBehaviour
 
 			print($"Produced Resource {WarehouseForProducedResource.ProducedResource.r_Type}; In Stock {WH_Manager.CheckResourceAvailability( WarehouseForProducedResource.ProducedResource.r_Type )}");	
 		}
+
+		ProductionInProgress = null;
 	}
 
 	void CheckResourceAvailability()
@@ -90,16 +95,39 @@ public class FactoryManager : MonoBehaviour
 
 				FactoryHasEnoughResources = resAmount >= resType.QuanityNeeded;
 
-				if ( !FactoryHasEnoughResources ) { ProductionStopped.Invoke( (int)ProductionDailureType.Lack_Of_Resources );  break; }
+				if ( !FactoryHasEnoughResources ) { ProductionStopped.Invoke( (int)ProductionDailureType.Lack_Of_Resources );  return; }
 			}
 		}
+
+		ProductionFailureRemoved.Invoke( ( int )ProductionDailureType.Lack_Of_Resources );
 	}
 
 	void CheckWarehouseCapacityForProducedResource()
 	{
-		FactoryHasEnoughCapacity = WH_Manager.CheckWarehouseCapacityForProducedResource( WarehouseForProducedResource.WarehoustType );
+		FactoryHasEnoughCapacity = !WH_Manager.CheckWarehouseCapacityForProducedResource( WarehouseForProducedResource.WarehoustType );
 
-		if( !FactoryHasEnoughCapacity ) ProductionStopped.Invoke( ( int )ProductionDailureType.Storage_Full );
+		if ( !FactoryHasEnoughCapacity ) { ProductionStopped.Invoke( ( int )ProductionDailureType.Storage_Full ); return; }
+
+		ProductionFailureRemoved.Invoke( ( int )ProductionDailureType.Storage_Full );
+	}
+
+	public void InventoryUpdated()
+	{
+		CheckResourceAvailability();
+
+		CheckWarehouseCapacityForProducedResource();
+
+		if ( FactoryHasEnoughCapacity && FactoryHasEnoughResources )
+		{
+			if( ProductionInProgress == null )
+			{
+				ProductionInProgress = StartCoroutine( ProduceElement() );
+			}
+		}
+		else
+		{
+			PlayStackedWarnings.Invoke();
+		}
 	}
 }
 

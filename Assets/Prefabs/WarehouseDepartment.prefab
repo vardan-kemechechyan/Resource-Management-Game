@@ -70,7 +70,8 @@ GameObject:
   - component: {fileID: 4086593002196316387}
   - component: {fileID: 2085418929307479193}
   - component: {fileID: 8970265898396193794}
-  m_Layer: 0
+  - component: {fileID: 3557315687141588159}
+  m_Layer: 3
   m_Name: ResourceStackingArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,8 +149,21 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6207066897644390410}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
+  m_IsTrigger: 1
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3557315687141588159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6207066897644390410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36dbcf9ca2f4c246b23dc74289bf8c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Warehouse: {fileID: 8598823286964049136}
